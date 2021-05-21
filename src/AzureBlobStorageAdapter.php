@@ -1,6 +1,6 @@
 <?php
 
-namespace League\Flysystem\AzureBlobStorage;
+namespace Thixpin\Azure\BlobStorage;
 
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
@@ -42,13 +42,21 @@ class AzureBlobStorageAdapter extends AbstractAdapter
 
     private $container;
 
+    private $blobUrl;
+
     private $maxResultsForContentsListing = 5000;
 
-    public function __construct(BlobRestProxy $client, $container, $prefix = null)
+    public function __construct(BlobRestProxy $client, $container, $blobUrl, $prefix = null)
     {
         $this->client = $client;
         $this->container = $container;
+        $this->blobUrl = $blobUrl;
         $this->setPathPrefix($prefix);
+    }
+
+    public function getUrl($file)
+    {
+        return $this->blobUrl . '/' . $this->container . '/' . $file;
     }
 
     public function write($path, $contents, Config $config)
